@@ -1,0 +1,12 @@
+{
+  "name": "korea-univ-restaurant-recommender",
+  "version": "1.0.0",
+  "description": "Korea University Restaurant Recommender with Antigravity Agent Simulation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

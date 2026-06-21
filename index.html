@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고려대학교 맛집 추천기 - Antigravity Agent</title>
+  <!-- Google Fonts: Outfit & Noto Sans KR for premium typography, Fira Code for Agent Terminal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-container">
+        <span class="logo-icon">🍽️</span>
+        <div class="logo-text">
+          <h1>ANAM EATS</h1>
+          <p>고려대학교 맛집 추천 에이전트</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="pulse-indicator"></span>
+        <span class="badge-text">Antigravity Agent Connected</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <main class="app-content">
+      
+      <!-- Left Column: Settings and Prompt Configuration -->
+      <div class="left-column">
+        <!-- Left Panel: Inputs & Preferences -->
+        <section class="control-panel glass-card">
+          <div class="panel-header">
+            <h2>설정 및 필터</h2>
+            <p>카테고리와 예산을 선택하여 추천을 시작하세요.</p>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">음식 카테고리</label>
+            <!-- Hidden input with id="category" to comply with the user's recommendUI code -->
+            <input type="hidden" id="category" value="한식">
+            <div class="category-grid">
+              <button type="button" class="category-btn active" data-value="한식">
+                <span class="cat-emoji">🇰🇷</span>
+                <span class="cat-label">한식</span>
+              </button>
+              <button type="button" class="category-btn" data-value="중식">
+                <span class="cat-emoji">🇨🇳</span>
+                <span class="cat-label">중식</span>
+              </button>
+              <button type="button" class="category-btn" data-value="일식">
+                <span class="cat-emoji">🇯🇵</span>
+                <span class="cat-label">일식</span>
+              </button>
+              <button type="button" class="category-btn" data-value="양식">
+                <span class="cat-emoji">🍕</span>
+                <span class="cat-label">양식</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="label-row">
+              <label class="input-label">최대 예산 설정</label>
+              <span class="budget-display"><span id="budget-val">10,000</span>원</span>
+            </div>
+            <!-- Range input with id="budget" to comply with the user's recommendUI code -->
+            <div class="slider-container">
+              <input type="range" id="budget" min="5000" max="20000" step="500" value="10000">
+              <div class="slider-bounds">
+                <span>5,000원</span>
+                <span>12,500원</span>
+                <span>20,000원</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="recommend-btn" class="primary-btn">
+            <span>✨ 맛집 추천 받기</span>
+          </button>
+        </section>
+
+        <!-- Agent Configuration Card -->
+        <section class="agent-config glass-card">
+          <div class="panel-header">
+            <h2>⚙️ Antigravity Agent 설정</h2>
+            <p>프로그램이 인지하는 에이전트 프롬프트 구성입니다.</p>
+          </div>
+          <div class="config-content">
+            <div class="config-block">
+              <span class="config-label">SYSTEM PROMPT</span>
+              <pre class="config-value">You are a food recommendation agent.
+
+Your task is to recommend a restaurant.</pre>
+            </div>
+            <div class="config-row">
+              <div class="config-item-box">
+                <span class="config-label">INPUT</span>
+                <ul class="config-list">
+                  <li>• category</li>
+                  <li>• budget</li>
+                </ul>
+              </div>
+              <div class="config-item-box">
+                <span class="config-label">ACTION</span>
+                <div class="config-action">recommend(category, budget)</div>
+              </div>
+            </div>
+            <div class="config-block" style="margin-top: 12px;">
+              <span class="config-label">OUTPUT RULES</span>
+              <ul class="config-list">
+                <li>• If result exists → return name and price</li>
+                <li>• If no result → "조건에 맞는 식당이 없습니다."</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Panel: Agent Log Console -->
+      <section class="agent-console glass-card">
+        <div class="panel-header terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="terminal-title">Antigravity food-agent Console</span>
+        </div>
+        <div class="terminal-body" id="terminal-logs">
+          <div class="log-line system-line">> Antigravity food-agent initialized. Ready to receive commands.</div>
+          <div class="log-line command-line">> recommend(category="한식", budget=10000)</div>
+          <div class="log-line info-line">Waiting for your selection...</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Section: Results & Restaurant List -->
+    <section class="results-area">
+      
+      <!-- Recommendation Output -->
+      <div class="recommendation-result glass-card hide" id="result-card">
+        <div class="card-glow"></div>
+        <div class="result-badge">TODAY'S PICK</div>
+        
+        <div class="result-details">
+          <!-- id="result" is required by the user's recommendUI function -->
+          <h3 id="result" class="result-title">식당이름 (가격원)</h3>
+          
+          <div class="meta-row">
+            <span class="meta-item" id="result-cat">한식</span>
+            <span class="meta-separator">•</span>
+            <span class="meta-item" id="result-time">도보 3분</span>
+          </div>
+
+          <p class="result-description" id="result-desc">식당 상세 정보입니다.</p>
+
+          <div class="tags-container" id="result-tags">
+            <!-- Dynamic tags -->
+          </div>
+        </div>
+      </div>
+
+      <!-- No Result State -->
+      <div class="no-result-card glass-card hide" id="no-result-card">
+        <div class="no-result-icon">⚠️</div>
+        <h3>조건에 맞는 식당이 없습니다</h3>
+        <p>예산을 높이거나 다른 카테고리를 선택해보세요!</p>
+      </div>
+
+      <!-- Full Restaurant Catalog -->
+      <div class="catalog-section glass-card">
+        <div class="catalog-header">
+          <h3>🎓 안암동 주변 맛집 리스트 (<span id="active-cat-name">한식</span>)</h3>
+          <p>선택하신 카테고리의 모든 음식점입니다.</p>
+        </div>
+        <div class="catalog-grid" id="catalog-list">
+          <!-- Dynamic restaurant catalog items -->
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="renderer.js"></script>
+</body>
+</html>
